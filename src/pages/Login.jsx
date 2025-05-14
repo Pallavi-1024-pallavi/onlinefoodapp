@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiMail, FiLock, FiAlertCircle, FiLogIn, FiUser, FiShield } from 'react-icons/fi';
+import { FiMail, FiLock, FiAlertCircle, FiLogIn } from 'react-icons/fi';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [loginType, setLoginType] = useState('user'); // 'user' or 'admin'
   const canvasRef = useRef(null);
   const navigate = useNavigate();
 
-  // Particle Background Effect
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -34,15 +32,12 @@ const Login = () => {
         this.speedY = Math.random() * 1 - 0.5;
         this.color = `rgba(255, 215, 0, ${Math.random() * 0.4 + 0.1})`;
       }
-
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-
         if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
         if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
       }
-
       draw() {
         ctx.fillStyle = this.color;
         ctx.beginPath();
@@ -60,13 +55,11 @@ const Login = () => {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
       for (let i = 0; i < particles.length; i++) {
         for (let j = i; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-
           if (distance < 100) {
             ctx.strokeStyle = `rgba(255, 215, 0, ${0.2 - distance / 500})`;
             ctx.lineWidth = 0.5;
@@ -97,16 +90,14 @@ const Login = () => {
       return;
     }
     setIsLoading(true);
-    
+    setError('');
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Admin Credential Check
-      if (loginType === 'admin' && email === 'admin@example.com' && password === 'admin123') {
+      await new Promise(resolve => setTimeout(resolve, 1500)); // simulate delay
+
+      if (email === 'admin@example.com' && password === 'admin123') {
         navigate('/admin-dashboard');
-      } 
-      // User Login (default)
-      else if (loginType === 'user') {
+      } else if (email === 'user@gmail.com' && password === 'user123') {
         navigate('/dashboard');
       } else {
         throw new Error('Invalid credentials');
@@ -118,172 +109,107 @@ const Login = () => {
     }
   };
 
-  // Styles
   const styles = {
     wrapper: {
+      position: 'relative',
       height: '100vh',
       width: '100vw',
-      backgroundColor: '#121212',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'relative',
       overflow: 'hidden',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#000',
     },
     canvas: {
       position: 'absolute',
       top: 0,
       left: 0,
-      zIndex: 1,
+      zIndex: 0,
     },
     container: {
-      maxWidth: '420px',
-      width: '90%',
+      zIndex: 1,
+      backgroundColor: 'rgba(255,255,255,0.1)',
       padding: '40px',
-      backgroundColor: 'rgba(30, 30, 30, 0.9)',
-      borderRadius: '16px',
-      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
-      fontFamily: "'Poppins', sans-serif",
-      color: 'white',
-      zIndex: 2,
-      backdropFilter: 'blur(8px)',
-      border: '1px solid rgba(255, 215, 0, 0.2)',
+      borderRadius: '12px',
+      boxShadow: '0 8px 20px rgba(0,0,0,0.3)',
+      backdropFilter: 'blur(15px)',
+      width: '90%',
+      maxWidth: '400px',
     },
     title: {
       textAlign: 'center',
-      marginBottom: '30px',
-      fontSize: '28px',
-      fontWeight: '600',
-      color: '#FFD700',
-    },
-    loginTypeToggle: {
-      display: 'flex',
-      gap: '10px',
       marginBottom: '24px',
-    },
-    toggleButton: {
-      flex: 1,
-      padding: '12px',
-      borderRadius: '8px',
-      border: '1px solid rgba(255, 215, 0, 0.3)',
-      background: 'rgba(0, 0, 0, 0.5)',
-      color: 'white',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '8px',
-      transition: 'all 0.3s',
-    },
-    toggleButtonActive: {
-      background: 'rgba(255, 215, 0, 0.2)',
-      borderColor: '#FFD700',
+      color: '#FFD700',
+      fontSize: '28px',
+      fontWeight: 'bold',
     },
     inputGroup: {
-      marginBottom: '24px',
-      position: 'relative',
+      marginBottom: '20px',
     },
     label: {
-      display: 'block',
-      marginBottom: '8px',
+      color: '#fff',
       fontSize: '14px',
-      fontWeight: '500',
-      color: '#FFD700',
+      marginBottom: '8px',
+      display: 'block',
     },
     inputContainer: {
-      position: 'relative',
       display: 'flex',
       alignItems: 'center',
-      height: '48px',
-    },
-    input: {
-      width: '100%',
-      height: '48px',
-      padding: '0 14px 0 42px',
-      border: '1px solid rgba(255, 215, 0, 0.3)',
-      borderRadius: '10px',
-      fontSize: '15px',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      color: 'white',
-      transition: 'border-color 0.3s, box-shadow 0.3s',
-      outline: 'none',
-      boxSizing: 'border-box',
-    },
-    inputFocus: {
-      borderColor: '#FFD700',
-      boxShadow: '0 0 0 2px rgba(255, 215, 0, 0.2)',
+      backgroundColor: '#222',
+      borderRadius: '8px',
+      padding: '10px',
+      border: '1px solid #444',
     },
     icon: {
-      position: 'absolute',
-      left: '14px',
       color: '#FFD700',
-      fontSize: '18px',
-      pointerEvents: 'none',
+      marginRight: '10px',
+    },
+    input: {
+      background: 'transparent',
+      border: 'none',
+      outline: 'none',
+      color: '#fff',
+      flex: 1,
+      fontSize: '14px',
+    },
+    inputFocus: {
+      border: '1px solid #FFD700',
     },
     button: {
       width: '100%',
-      height: '48px',
-      padding: '0',
-      background: 'linear-gradient(135deg, #FFD700 0%, #FFC000 100%)',
-      color: 'black',
-      fontWeight: '600',
+      padding: '12px',
+      borderRadius: '8px',
       border: 'none',
-      borderRadius: '10px',
-      cursor: 'pointer',
+      backgroundColor: '#FFD700',
+      color: '#000',
       fontSize: '16px',
-      transition: 'all 0.3s',
+      fontWeight: 'bold',
+      cursor: 'pointer',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      gap: '10px',
+      gap: '8px',
+      transition: 'background 0.3s ease',
     },
     buttonHover: {
-      transform: 'translateY(-2px)',
-      boxShadow: '0 5px 15px rgba(255, 215, 0, 0.4)',
+      backgroundColor: '#e6c200',
     },
     error: {
-      color: '#FF4D4F',
-      marginBottom: '16px',
-      fontSize: '14px',
+      color: 'red',
+      marginBottom: '15px',
+      textAlign: 'center',
       display: 'flex',
       alignItems: 'center',
+      justifyContent: 'center',
       gap: '8px',
-      padding: '10px',
-      backgroundColor: 'rgba(255, 77, 79, 0.1)',
-      borderRadius: '8px',
-      borderLeft: '3px solid #FF4D4F',
     },
   };
 
   return (
     <div style={styles.wrapper}>
       <canvas ref={canvasRef} style={styles.canvas} />
-
       <div style={styles.container}>
         <h2 style={styles.title}>Welcome Back</h2>
-        
-        <div style={styles.loginTypeToggle}>
-          <button
-            type="button"
-            style={{
-              ...styles.toggleButton,
-              ...(loginType === 'user' ? styles.toggleButtonActive : {}),
-            }}
-            onClick={() => setLoginType('user')}
-          >
-            <FiUser /> User Login
-          </button>
-          <button
-            type="button"
-            style={{
-              ...styles.toggleButton,
-              ...(loginType === 'admin' ? styles.toggleButtonActive : {}),
-            }}
-            onClick={() => setLoginType('admin')}
-          >
-            <FiShield /> Admin Login
-          </button>
-        </div>
 
         {error && (
           <div style={styles.error}>
@@ -299,11 +225,9 @@ const Login = () => {
               <input
                 style={styles.input}
                 type="email"
-                placeholder={loginType === 'admin' ? 'admin@example.com' : 'your@email.com'}
+                placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
-                onBlur={(e) => Object.assign(e.target.style, styles.input)}
                 required
               />
             </div>
@@ -316,11 +240,9 @@ const Login = () => {
               <input
                 style={styles.input}
                 type="password"
-                placeholder={loginType === 'admin' ? 'admin123' : '••••••••'}
+                placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
-                onBlur={(e) => Object.assign(e.target.style, styles.input)}
                 required
               />
             </div>
@@ -337,7 +259,7 @@ const Login = () => {
             onMouseLeave={(e) => !isLoading && Object.assign(e.target.style, styles.button)}
           >
             <FiLogIn size={18} />
-            {isLoading ? 'Authenticating...' : `Login as ${loginType}`}
+            {isLoading ? 'Authenticating...' : 'Login'}
           </button>
         </form>
       </div>

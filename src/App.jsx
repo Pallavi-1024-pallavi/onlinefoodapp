@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Cart from './components/Cart';
 import AdminDashboard from './adminpages/AdminDashboard';
 import Profile from './pages/Profile';
+import Aboutus from './pages/Aboutus';
 
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/cart" element={<Cart />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/about-us" element={<Aboutus />} />
         </Routes>
       </Router>
   );
