@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiMail, FiLock, FiAlertCircle, FiUser, FiLogIn } from 'react-icons/fi';
+import { FiMail, FiLock, FiAlertCircle, FiUser } from 'react-icons/fi';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -12,14 +12,12 @@ const Signup = () => {
   const canvasRef = useRef(null);
   const navigate = useNavigate();
 
-  // Particle Background Effect
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let particles = [];
     const particleCount = window.innerWidth < 768 ? 30 : 60;
 
-    // Set canvas size
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -27,7 +25,6 @@ const Signup = () => {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Particle class
     class Particle {
       constructor() {
         this.x = Math.random() * canvas.width;
@@ -37,15 +34,12 @@ const Signup = () => {
         this.speedY = Math.random() * 1 - 0.5;
         this.color = `rgba(255, 215, 0, ${Math.random() * 0.4 + 0.1})`;
       }
-
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-
         if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
         if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
       }
-
       draw() {
         ctx.fillStyle = this.color;
         ctx.beginPath();
@@ -54,7 +48,6 @@ const Signup = () => {
       }
     }
 
-    // Create particles
     const init = () => {
       particles = [];
       for (let i = 0; i < particleCount; i++) {
@@ -62,17 +55,13 @@ const Signup = () => {
       }
     };
 
-    // Animation loop
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Connect particles
       for (let i = 0; i < particles.length; i++) {
         for (let j = i; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-
           if (distance < 100) {
             ctx.strokeStyle = `rgba(255, 215, 0, ${0.2 - distance / 500})`;
             ctx.lineWidth = 0.5;
@@ -99,7 +88,8 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    
+    setError('');
+
     if (email !== confirmEmail) {
       setError('Emails do not match.');
       setIsLoading(false);
@@ -115,19 +105,18 @@ const Signup = () => {
       setIsLoading(false);
       return;
     }
-    
+
     try {
       await new Promise(resolve => setTimeout(resolve, 1500));
       alert('Signup successful!');
       navigate('/dashboard');
-    } catch (err) {
+    } catch {
       setError('Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Styles (identical to login)
   const styles = {
     wrapper: {
       height: '100vh',
@@ -167,7 +156,6 @@ const Signup = () => {
     },
     inputGroup: {
       marginBottom: '24px',
-      position: 'relative',
     },
     label: {
       display: 'block',
@@ -191,7 +179,6 @@ const Signup = () => {
       fontSize: '15px',
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
       color: 'white',
-      transition: 'border-color 0.3s, box-shadow 0.3s',
       outline: 'none',
       boxSizing: 'border-box',
     },
@@ -209,7 +196,6 @@ const Signup = () => {
     button: {
       width: '100%',
       height: '48px',
-      padding: '0',
       background: 'linear-gradient(135deg, #FFD700 0%, #FFC000 100%)',
       color: 'black',
       fontWeight: '600',
@@ -217,7 +203,6 @@ const Signup = () => {
       borderRadius: '10px',
       cursor: 'pointer',
       fontSize: '16px',
-      transition: 'all 0.3s',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
@@ -249,26 +234,20 @@ const Signup = () => {
       color: '#FFD700',
       textDecoration: 'none',
       fontWeight: '500',
+      cursor: 'pointer',
     },
   };
 
   return (
     <div style={styles.wrapper}>
-      {/* Particle Background Canvas */}
-      <canvas 
-        ref={canvasRef} 
-        style={styles.canvas}
-      />
-
+      <canvas ref={canvasRef} style={styles.canvas} />
       <div style={styles.container}>
         <h2 style={styles.title}>Create Account</h2>
-        
         {error && (
           <div style={styles.error}>
             <FiAlertCircle size={18} /> {error}
           </div>
         )}
-
         <form onSubmit={handleSubmit}>
           <div style={styles.inputGroup}>
             <label style={styles.label}>Email Address</label>
@@ -280,13 +259,10 @@ const Signup = () => {
                 placeholder="your@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
-                onBlur={(e) => Object.assign(e.target.style, styles.input)}
                 required
               />
             </div>
           </div>
-
           <div style={styles.inputGroup}>
             <label style={styles.label}>Confirm Email</label>
             <div style={styles.inputContainer}>
@@ -297,13 +273,10 @@ const Signup = () => {
                 placeholder="confirm@email.com"
                 value={confirmEmail}
                 onChange={(e) => setConfirmEmail(e.target.value)}
-                onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
-                onBlur={(e) => Object.assign(e.target.style, styles.input)}
                 required
               />
             </div>
           </div>
-
           <div style={styles.inputGroup}>
             <label style={styles.label}>Password</label>
             <div style={styles.inputContainer}>
@@ -314,13 +287,10 @@ const Signup = () => {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
-                onBlur={(e) => Object.assign(e.target.style, styles.input)}
                 required
               />
             </div>
           </div>
-
           <div style={styles.inputGroup}>
             <label style={styles.label}>Confirm Password</label>
             <div style={styles.inputContainer}>
@@ -331,13 +301,10 @@ const Signup = () => {
                 placeholder="••••••••"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                onFocus={(e) => Object.assign(e.target.style, styles.inputFocus)}
-                onBlur={(e) => Object.assign(e.target.style, styles.input)}
                 required
               />
             </div>
           </div>
-
           <button
             type="submit"
             style={{
@@ -352,12 +319,14 @@ const Signup = () => {
             {isLoading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
-
         <div style={styles.footer}>
           Already have an account?{' '}
-          <a href="/login" style={styles.footerLink}>
+          <span
+            style={styles.footerLink}
+            onClick={() => navigate('/login')}
+          >
             Login
-          </a>
+          </span>
         </div>
       </div>
     </div>
